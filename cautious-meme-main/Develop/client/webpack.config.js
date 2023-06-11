@@ -14,18 +14,38 @@ module.exports = () => {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
-    
-      filename: '[name].bundle.js',
-      path: path.resolve(__dirname, 'dist'),
-    },
-    plugins: [
-      
-    ],
 
-    module: {
-      rules: [
-        
-      ],
-    },
-  };
-};
+     plugins: [
+      // webpack plugin that generates our html file and injects our bundles
+      new HtmlWebpackPlugin({
+        template: './index.html',
+        // application name
+        title: 'JATE',
+      }),
+
+      // injects our custom service worker
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
+      }),
+
+      // creates a manifest.json file
+      new WebpackPwaManifest({
+        fingerprints: false,
+        inject: true,
+        name: 'Just Another Text Editor',
+        short_name: 'JATE',
+        description: 'Add and Edit your Text!',
+        background_color: '#225ca3',
+        theme_color: '#225ca3',
+        start_url: './',
+        publicPath: './',
+        icons: [
+          {
+            src: path.resolve('src/images/logo.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
+          },
+        ],
+      }),
+    ],
