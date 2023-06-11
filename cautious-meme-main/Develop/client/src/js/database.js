@@ -29,3 +29,19 @@ export const putDb = async (content) => {
   const result = await request;
   console.log('🚀 - data saved to the database', result.value);
 }
+
+export const getDb = async () => {
+  console.log('GET all from the database');
+  const jateDb = await openDB('jate', 1);
+  const tx = jateDb.transaction('jate', 'readonly');
+  const store = tx.objectStore('jate');
+  const request = store.get('text');
+  const result = await request;
+  result
+    ? console.log("🚀 - data retrieved from the database", result.value)
+    : console.log("🚀 - data not found in the database");
+
+  return result?.value;
+}
+
+initdb(
